@@ -27,18 +27,27 @@ services:
         sync: false
       - key: DB_NAME
         sync: false
-      - key: DB_SSL_CA
-        sync: false
+      - key: DB_SSL_REQUIRED
+        value: "1"
       # Email (Resend) — card-free, walang SMTP
       - key: RESEND_API_KEY
         sync: false
       - key: MAIL_TO
         sync: false
       - key: MAIL_FROM
-        sync: false
+        value: Portfolio <onboarding@resend.dev>
       # Images (Cloudinary)
       - key: CLOUDINARY_URL
         sync: false
       # AI assistant (opsyonal)
       - key: AI_API_KEY
+        sync: false
+      - key: AI_BASE_URL
+        value: https://openrouter.ai/api/v1
+      - key: AI_MODEL
+        value: meta-llama/llama-3.1-8b-instruct
+      # Social links (blangko = nakatago ang button)
+      - key: FACEBOOK_URL
+        value: https://www.facebook.com/profile.php?id=61594507312243
+      - key: TIKTOK_URL
         sync: false
