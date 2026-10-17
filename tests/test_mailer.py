@@ -187,6 +187,7 @@ def test_resend_send(app, monkeypatch):
         import json as _json
         sent["url"] = req.full_url
         sent["auth"] = req.get_header("Authorization")
+        sent["headers"] = req.headers
         sent["payload"] = _json.loads(req.data.decode("utf-8"))
         return FakeResp()
 
@@ -198,6 +199,8 @@ def test_resend_send(app, monkeypatch):
 
     assert sent["url"] == "https://api.resend.com/emails"
     assert sent["auth"] == "Bearer re_123"
+    # Dapat may User-Agent (hinaharang ng Cloudflare ang default urllib UA).
+    assert any(k.lower() == "user-agent" for k in sent["headers"])
     assert sent["payload"]["to"] == ["me@example.com"]
     assert sent["payload"]["reply_to"] == "ana@example.com"
     assert "Ana" in sent["payload"]["subject"]

@@ -85,6 +85,10 @@ def _send_resend(cfg, name, email, subject, body):
         headers={
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
+            # Ang Resend ay nasa likod ng Cloudflare, na humaharang sa
+            # default na "Python-urllib" UA (error 1010). Kailangan ng UA.
+            "User-Agent": "Portfolio-Mailer/1.0",
+            "Accept": "application/json",
         },
         method="POST",
     )
