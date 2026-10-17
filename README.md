@@ -101,17 +101,33 @@ sudo certbot --nginx -d <public-ip>.sslip.io
 **Mahalagang paalala:** sa Oracle Console, buksan din ang **Security List**
 (ingress TCP 80 at 443) — hiwalay ito sa iptables na na-setup na ng `setup.sh`.
 
-## Deploy (Render)
+## Deploy (Render — $0, walang credit card)
 
-1. I-push ang project sa GitHub (tingnan ang `.gitignore`; hindi kasama ang `.env`).
-2. Sa Render: **New > Web Service**, i-connect ang repo.
-3. Build command: `pip install -r requirements.txt`
-4. Start command: `gunicorn app:app`
-5. Environment variables: `SECRET_KEY`, `DB_*`, `FLASK_ENV=production`, `SESSION_COOKIE_SECURE=1`, `SMTP_*`/`MAIL_TO` (para sa email)
-6. Gumamit ng managed MySQL (Render MySQL, PlanetScale, o Railway) para sa database.
+Stack (lahat libre, walang card):
+- **Web**: Render Free (Web Service)
+- **MySQL**: [Aiven Free MySQL](https://aiven.io/free-mysql-database)
+- **Images**: [Cloudinary Free](https://cloudinary.com/) — hindi nawawala sa redeploy
+- **Email**: [Resend Free](https://resend.com/) — HTTP API (blocked ang SMTP sa Render free)
 
-> Note: Ang rate limiter ay in-memory by default. Para sa multi-worker production,
-> mag-configure ng Redis storage (tingnan ang Flask-Limiter docs).
+1. I-push ang project sa GitHub.
+2. Sa Render: **New > Blueprint** (para gamitin ang `render.yaml`) o **New > Web Service**.
+   - Build: `pip install -r requirements.txt`
+   - Start: `gunicorn app:app`
+3. Sa **Aiven**: gumawa ng MySQL service → kopyahin ang `host`, `port`, `user`,
+   `password`, `database`. I-download ang **CA certificate** (`ca.pem`) →
+   ilagay sa repo bilang `certs/aiven-ca.pem`.
+4. Sa **Cloudinary**: kopyahin ang `CLOUDINARY_URL`.
+5. Sa **Resend**: gumawa ng API key → `RESEND_API_KEY`; `MAIL_TO` = email mo.
+6. Sa Render **Environment** tab, ilagay ang mga ito:
+   `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_SSL_CA=certs/aiven-ca.pem`,
+   `RESEND_API_KEY`, `MAIL_TO`, `MAIL_FROM`, `CLOUDINARY_URL`.
+7. Deploy → buksan ang site → gumawa ng admin account (isa-isa sa Render Shell):
+   `python seed_admin.py`
+
+> **Note:** natutulog ang Render free pag walang bisita (~30-60s cold start);
+> natutulog din ang Aiven free pag idle. Ang rate limiter ay in-memory by
+> default (per-worker); magdagdag ng Render Key Value (Redis) at i-set ang
+> `RATELIMIT_STORAGE_URI` kung gusto ng shared limits.
 
 ## Project structure
 
@@ -121,14 +137,18 @@ portfolio/
 ├─ config.py           # config (env-based)
 ├─ database.py         # MySQL helper + schema (reused sa class pattern)
 ├─ security.py         # password hashing, login_required, validation
-├─ mailer.py           # email notifications (stdlib smtplib)
+├─ mailer.py           # email notifications (Resend API o smtplib)
+├─ uploads.py          # cloud image storage (Cloudinary, stdlib)
+├─ assistant.py        # AI chat (OpenAI-compatible)
 ├─ extensions.py       # shared csrf + limiter
 ├─ seed_admin.py       # gumagawa ng admin account
 ├─ blueprints/
 │  ├─ main.py          # public routes
 │  └─ admin.py         # admin routes (CRUD)
 ├─ templates/          # Jinja2 + Tailwind
-├─ static/uploads/     # uploaded images
+├─ static/uploads/     # uploaded images (fallback kapag walang Cloudinary)
+├─ deploy/             # VPS setup (systemd, nginx, setup.sh)
+├─ render.yaml         # Render blueprint (card-free deploy)
 ├─ schema.sql          # reference DDL
 └─ requirements.txt
 ```

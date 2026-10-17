@@ -1,0 +1,3 @@
+# Ilagay dito ang Aiven CA certificate (ca.pem) para sa managed MySQL.
+# I-download sa Aiven Console > MySQL service > "CA certificate".
+# Halimbawa ng file: certs/aiven-ca.pem

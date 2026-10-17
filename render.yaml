@@ -1,0 +1,44 @@
+services:
+  - type: web
+    name: jonard-portfolio
+    runtime: python
+    plan: free
+    region: singapore
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: FLASK_ENV
+        value: production
+      - key: SESSION_COOKIE_SECURE
+        value: "1"
+      # Awtomatikong bibigyan ng mahabang random value ng Render
+      - key: SECRET_KEY
+        generateValue: true
+      # Ipapasok mo sa Render Dashboard (Environment tab)
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_NAME
+        sync: false
+      - key: DB_SSL_CA
+        sync: false
+      # Email (Resend) — card-free, walang SMTP
+      - key: RESEND_API_KEY
+        sync: false
+      - key: MAIL_TO
+        sync: false
+      - key: MAIL_FROM
+        sync: false
+      # Images (Cloudinary)
+      - key: CLOUDINARY_URL
+        sync: false
+      # AI assistant (opsyonal)
+      - key: AI_API_KEY
+        sync: false

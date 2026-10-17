@@ -15,6 +15,7 @@ from flask import (Blueprint, render_template, request, redirect,
 from werkzeug.utils import secure_filename
 
 import database as db
+import uploads
 from extensions import limiter
 from security import login_required, verify_password, current_admin_id, clean
 
@@ -73,11 +74,20 @@ def _paginate(page, per_page, total):
 
 
 def _delete_uploaded_image(image_url):
-    """Burahin ang lokal uploaded file (static/uploads) para hindi
-    mag-iwan ng orphaned files. Ligtas: local uploads lang, walang path
-    traversal."""
+    """Burahin ang uploaded file (cloud kapag naka-configure ang Cloudinary,
+    kundi lokal sa static/uploads). Ligtas: walang path traversal."""
     if not image_url:
         return
+
+    # Cloud storage (Cloudinary)
+    if uploads.is_enabled() and uploads.is_cloudinary_url(image_url):
+        try:
+            uploads.delete_by_url(image_url)
+        except uploads.UploadError as e:
+            current_app.logger.warning("Hindi nabura ang cloud image %s: %s",
+                                       image_url, e)
+        return
+
     marker = "/static/uploads/"
     if marker not in image_url:
         return
@@ -108,7 +118,8 @@ def _unique_slug(conn, base, table="projects", exclude_id=None):
 
 
 def _save_image(file):
-    """I-save ang uploaded image nang ligtas. Magbalik ng URL o None."""
+    """I-save ang uploaded image nang ligtas (Cloudinary kung naka-configure,
+    kundi lokal na disk). Magbalik ng URL o None."""
     if not file or not file.filename:
         return None
     filename = secure_filename(file.filename)
@@ -117,8 +128,20 @@ def _save_image(file):
         flash("Hindi allowed na image type.", "warning")
         return None
     unique = f"{uuid.uuid4().hex[:12]}.{ext}"
+    data = file.read()
+
+    if uploads.is_enabled():
+        try:
+            return uploads.upload_bytes(data, f"portfolio/{unique}",
+                                        file.mimetype)
+        except uploads.UploadError as e:
+            current_app.logger.warning("Cloudinary upload failed: %s", e)
+            flash("Hindi na-upload sa cloud storage; naka-save locally.",
+                  "warning")
+
     path = os.path.join(current_app.config["UPLOAD_FOLDER"], unique)
-    file.save(path)
+    with open(path, "wb") as fh:
+        fh.write(data)
     return url_for("static", filename=f"uploads/{unique}")
 
 

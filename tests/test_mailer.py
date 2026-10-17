@@ -158,3 +158,47 @@ def test_fallback_subject_sanitizes_name(app, monkeypatch):
     assert "\n" not in sent["subject"]
     assert "\r" not in sent["subject"]
     assert "Ana" in sent["subject"]
+
+
+def test_is_enabled_true_when_resend_configured(app):
+    app.config.update(RESEND_API_KEY="re_123")
+    with app.app_context():
+        assert mailer.is_enabled() is True
+
+
+def test_resend_send(app, monkeypatch):
+    app.config.update(
+        RESEND_API_KEY="re_123",
+        MAIL_TO="me@example.com",
+        MAIL_FROM="Portfolio <onboarding@resend.dev>",
+    )
+    sent = {}
+
+    class FakeResp:
+        status = 200
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+    def fake_urlopen(req, timeout=None):
+        import json as _json
+        sent["url"] = req.full_url
+        sent["auth"] = req.get_header("Authorization")
+        sent["payload"] = _json.loads(req.data.decode("utf-8"))
+        return FakeResp()
+
+    monkeypatch.setattr(mailer.urllib.request, "urlopen", fake_urlopen)
+
+    with app.app_context():
+        assert mailer.send_contact_notification(
+            "Ana", "ana@example.com", "", "Kumusta!") is True
+
+    assert sent["url"] == "https://api.resend.com/emails"
+    assert sent["auth"] == "Bearer re_123"
+    assert sent["payload"]["to"] == ["me@example.com"]
+    assert sent["payload"]["reply_to"] == "ana@example.com"
+    assert "Ana" in sent["payload"]["subject"]
+    assert "Kumusta!" in sent["payload"]["text"]

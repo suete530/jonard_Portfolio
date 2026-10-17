@@ -42,6 +42,9 @@ class Config:
     DB_USER = os.environ.get("DB_USER", "root")
     DB_PASSWORD = os.environ.get("DB_PASSWORD", "")
     DB_NAME = os.environ.get("DB_NAME", "portfolio_db")
+    # Path sa CA cert para sa SSL (kailangan ng managed DB tulad ng Aiven).
+    # Blangko = hindi ipipilit ang SSL (ok sa local XAMPP).
+    DB_SSL_CA = os.environ.get("DB_SSL_CA", "")
 
     # --- Security ---
     LOGIN_MAX_ATTEMPTS = 8                  # bago ma-throttle
@@ -75,6 +78,20 @@ class Config:
     SMTP_TIMEOUT = int(os.environ.get("SMTP_TIMEOUT", "20"))
     MAIL_TO = os.environ.get("MAIL_TO", "")   # email mo (recipient); default = SMTP_USER
 
+    # --- Email via HTTP API (Resend) ---
+    # Para sa online host na hinaharang ang SMTP ports (hal. Render free).
+    # I-set ang RESEND_API_KEY para gamitin ito imbes na SMTP.
+    RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
+    MAIL_FROM = os.environ.get("MAIL_FROM", "Portfolio <onboarding@resend.dev>")
+
+    # --- Cloud image storage (Cloudinary) ---
+    # Kapag naka-set, dito naka-save ang image uploads (hindi nawawala sa
+    # redeploy). Sinusuportahan ang CLOUDINARY_URL o hiwa-hiwalay na vars.
+    CLOUDINARY_URL = os.environ.get("CLOUDINARY_URL", "")
+    CLOUDINARY_CLOUD_NAME = os.environ.get("CLOUDINARY_CLOUD_NAME", "")
+    CLOUDINARY_API_KEY = os.environ.get("CLOUDINARY_API_KEY", "")
+    CLOUDINARY_API_SECRET = os.environ.get("CLOUDINARY_API_SECRET", "")
+
     # --- AI Assistant (OpenAI-compatible) ---
     # Walang API key = naka-disable ang assistant (hindi lalabas ang error sa user).
     AI_API_KEY = os.environ.get("AI_API_KEY", "")
@@ -87,7 +104,7 @@ class Config:
 
     @classmethod
     def db_config(cls):
-        return {
+        cfg = {
             "host": cls.DB_HOST,
             "port": cls.DB_PORT,
             "user": cls.DB_USER,
@@ -96,6 +113,11 @@ class Config:
             "charset": "utf8mb4",
             "autocommit": False,
         }
+        if cls.DB_SSL_CA:
+            # Managed MySQL (Aiven, etc.) ay nangangailangan ng TLS.
+            cfg["ssl_ca"] = cls.DB_SSL_CA
+            cfg["ssl_verify_cert"] = True
+        return cfg
 
 
 class ProductionConfig(Config):
