@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}{{ project.title }} &middot; My Portfolio{% endblock %}
+
+{% block content %}
+<article class="max-w-3xl mx-auto px-4 py-16">
+  <a href="{{ url_for('main.projects') }}" class="text-sm text-brand hover:underline">&larr; Back to projects</a>
+  <h1 class="text-3xl sm:text-4xl font-bold text-white mt-4">{{ project.title }}</h1>
+
+  {% if project.tech_stack %}
+    <div class="mt-4 flex flex-wrap gap-2">
+      {% for t in project.tech_stack.split(',') %}
+        <span class="text-xs px-2.5 py-1 rounded-full bg-slate-800 text-slate-300">{{ t.strip() }}</span>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% if project.image_url %}
+    <img src="{{ project.image_url }}" alt="{{ project.title }}" referrerpolicy="no-referrer"
+         class="mt-6 w-full rounded-xl border border-slate-800">
+  {% endif %}
+
+  {% if project.summary %}
+    <p class="mt-6 text-lg text-slate-300">{{ project.summary }}</p>
+  {% endif %}
+
+  {% if project.description %}
+    <div class="mt-4 text-slate-400 whitespace-pre-line leading-relaxed">{{ project.description }}</div>
+  {% endif %}
+
+  <div class="mt-8 flex flex-wrap gap-3">
+    {% if project.live_url %}
+      <a href="{{ project.live_url }}" target="_blank" rel="noopener noreferrer"
+         class="px-5 py-2.5 rounded-lg bg-brand hover:bg-brand-dark text-white font-medium transition">Live Demo</a>
+    {% endif %}
+    {% if project.repo_url %}
+      <a href="{{ project.repo_url }}" target="_blank" rel="noopener noreferrer"
+         class="px-5 py-2.5 rounded-lg border border-slate-700 hover:border-slate-500 text-slate-200 font-medium transition">Source Code</a>
+    {% endif %}
+  </div>
+</article>
+{% endblock %}

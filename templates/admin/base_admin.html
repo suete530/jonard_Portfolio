@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Admin{% endblock %} &middot; Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: { colors: { brand: { DEFAULT: '#6366f1', dark: '#4f46e5' } } } } }
+  </script>
+</head>
+<body class="bg-slate-950 text-slate-200 min-h-screen antialiased">
+
+<div class="flex min-h-screen">
+  <aside class="hidden md:flex w-60 flex-col border-r border-slate-800 bg-slate-900/40 p-4">
+    <a href="{{ url_for('admin.dashboard') }}" class="font-bold text-lg text-white px-3 py-2">
+      admin<span class="text-brand">.panel</span>
+    </a>
+    <nav class="mt-6 space-y-1 text-sm">
+      <a href="{{ url_for('admin.dashboard') }}" class="block px-3 py-2 rounded-lg hover:bg-slate-800/70 transition">Dashboard</a>
+      <a href="{{ url_for('admin.projects') }}" class="block px-3 py-2 rounded-lg hover:bg-slate-800/70 transition">Projects</a>
+      <a href="{{ url_for('admin.templates') }}" class="block px-3 py-2 rounded-lg hover:bg-slate-800/70 transition">Templates</a>
+      <a href="{{ url_for('admin.messages') }}" class="block px-3 py-2 rounded-lg hover:bg-slate-800/70 transition">Messages</a>
+    </nav>
+    <div class="mt-auto space-y-1 text-sm pt-4 border-t border-slate-800">
+      <a href="{{ url_for('main.index') }}" target="_blank" class="block px-3 py-2 rounded-lg hover:bg-slate-800/70 transition">View site &nearr;</a>
+      <form method="post" action="{{ url_for('admin.logout') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="block w-full text-left px-3 py-2 rounded-lg text-rose-400 hover:bg-rose-500/10 transition">Logout</button>
+      </form>
+    </div>
+  </aside>
+
+  <div class="flex-1">
+    <header class="md:hidden flex items-center justify-between px-4 h-14 border-b border-slate-800">
+      <span class="font-bold text-white">admin<span class="text-brand">.panel</span></span>
+      <div class="flex gap-2 text-sm">
+        <a href="{{ url_for('admin.projects') }}" class="px-2 py-1">Projects</a>
+        <a href="{{ url_for('admin.templates') }}" class="px-2 py-1">Templates</a>
+        <a href="{{ url_for('admin.messages') }}" class="px-2 py-1">Messages</a>
+        <form method="post" action="{{ url_for('admin.logout') }}" class="inline">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button type="submit" class="px-2 py-1 text-rose-400">Logout</button>
+        </form>
+      </div>
+    </header>
+
+    {% with msgs = get_flashed_messages(with_categories=true) %}
+      {% if msgs %}
+        <div class="px-6 pt-4 space-y-2">
+          {% for category, message in msgs %}
+            {% set styles = {
+              'success': 'bg-emerald-500/10 border-emerald-500/40 text-emerald-300',
+              'danger':  'bg-rose-500/10 border-rose-500/40 text-rose-300',
+              'warning': 'bg-amber-500/10 border-amber-500/40 text-amber-300'
+            } %}
+            <div class="border rounded-lg px-4 py-3 text-sm {{ styles.get(category, styles['success']) }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <main class="p-6">{% block content %}{% endblock %}</main>
+  </div>
+</div>
+</body>
+</html>

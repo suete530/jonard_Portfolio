@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>{% block title %}My Portfolio{% endblock %}</title>
+  <meta name="description" content="{% block description %}Freelance full-stack developer - frontend, backend, database, hosting.{% endblock %}">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: { colors: { brand: { DEFAULT: 'rgb(var(--brand) / <alpha-value>)', dark: 'rgb(var(--brand-dark) / <alpha-value>)' } } } } }
+  </script>
+  <style>
+    :root { --brand: 99 102 241; --brand-dark: 79 70 229; --bg: #020617; }
+    body { background-color: var(--bg) !important; }
+  </style>
+  <script>
+    window.PORTFOLIO_THEMES = {
+      indigo:  { brand: '99 102 241', dark: '79 70 229', bg: '#020617' },
+      emerald: { brand: '16 185 129', dark: '5 150 105', bg: '#02160f' },
+      rose:    { brand: '244 63 94',  dark: '225 29 72',  bg: '#1a0510' },
+      amber:   { brand: '245 158 11', dark: '217 119 6',  bg: '#1a1205' },
+      cyan:    { brand: '6 182 212',  dark: '8 145 178',  bg: '#04181d' }
+    };
+    (function () {
+      var name = localStorage.getItem('portfolio-theme') || 'indigo';
+      var t = window.PORTFOLIO_THEMES[name] || window.PORTFOLIO_THEMES.indigo;
+      var r = document.documentElement;
+      r.style.setProperty('--brand', t.brand);
+      r.style.setProperty('--brand-dark', t.dark);
+      r.style.setProperty('--bg', t.bg);
+    })();
+  </script>
+  {% block head %}{% endblock %}
+</head>
+<body class="bg-slate-950 text-slate-200 min-h-screen flex flex-col antialiased">
+
+  <nav class="sticky top-0 z-50 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur">
+    <div class="max-w-6xl mx-auto px-4 flex items-center justify-between h-16">
+      <a href="{{ url_for('main.index') }}" class="font-bold text-lg tracking-tight text-white">
+        jonard<span class="text-brand">.portfolio</span>
+      </a>
+      <div class="flex items-center gap-2 text-sm">
+        <div class="flex items-center gap-1 mr-1" id="theme-picker">
+          <button type="button" data-theme="indigo" class="w-6 h-6 rounded-full bg-indigo-500 border-2 border-slate-700 hover:scale-105 transition" title="Indigo"></button>
+          <button type="button" data-theme="emerald" class="w-6 h-6 rounded-full bg-emerald-500 border-2 border-slate-700 hover:scale-105 transition" title="Emerald"></button>
+          <button type="button" data-theme="rose" class="w-6 h-6 rounded-full bg-rose-500 border-2 border-slate-700 hover:scale-105 transition" title="Rose"></button>
+          <button type="button" data-theme="amber" class="w-6 h-6 rounded-full bg-amber-500 border-2 border-slate-700 hover:scale-105 transition" title="Amber"></button>
+          <button type="button" data-theme="cyan" class="w-6 h-6 rounded-full bg-cyan-500 border-2 border-slate-700 hover:scale-105 transition" title="Cyan"></button>
+        </div>
+        <a href="{{ url_for('main.index') }}" class="px-3 py-2 rounded-lg hover:bg-slate-800/70 transition">{{ _('Home') }}</a>
+        <div class="relative" id="lang-picker">
+          <button type="button" id="lang-btn" class="flex items-center gap-1 px-3 py-2 rounded-lg hover:bg-slate-800/70 transition">
+            <span>{{ language_names.get(current_language, current_language) }}</span>
+            <svg class="w-3 h-3" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+          </button>
+          <div id="lang-menu" class="hidden absolute right-0 mt-1 w-40 rounded-lg border border-slate-800 bg-slate-900 shadow-lg py-1 z-50">
+            {% for code in languages %}
+              <a href="?lang={{ code }}" data-lang="{{ code }}"
+                 class="flex items-center justify-between px-4 py-2 text-sm hover:bg-slate-800/70 transition {% if code == current_language %}text-brand font-medium{% endif %}">
+                {{ language_names.get(code, code) }}
+                {% if code == current_language %}<span>&check;</span>{% endif %}
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+        {% if ai_enabled %}
+        <button type="button" id="ai-btn" class="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-brand/40 text-brand hover:bg-brand/10 transition font-medium">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.9 5.6L19 9l-4.4 3.1L16 18l-4-2.9L8 18l1.4-5.9L5 9l5.1-1.4L12 2z"/></svg>
+          AI
+        </button>
+        {% endif %}
+        <a href="{{ url_for('main.templates') }}" class="px-3 py-2 rounded-lg hover:bg-slate-800/70 transition">{{ _('Templates') }}</a>
+        <a href="{{ url_for('main.projects') }}" class="px-3 py-2 rounded-lg hover:bg-slate-800/70 transition">{{ _('Projects') }}</a>
+        <a href="{{ url_for('main.contact') }}" class="px-3 py-2 rounded-lg hover:bg-slate-800/70 transition">{{ _('Contact') }}</a>
+        <a href="{{ url_for('admin.dashboard') }}" class="px-3 py-2 rounded-lg bg-brand hover:bg-brand-dark text-white font-medium transition">Admin</a>
+      </div>
+    </div>
+  </nav>
+
+  {% with msgs = get_flashed_messages(with_categories=true) %}
+    {% if msgs %}
+      <div class="max-w-6xl w-full mx-auto px-4 mt-4 space-y-2">
+        {% for category, message in msgs %}
+          {% set styles = {
+            'success': 'bg-emerald-500/10 border-emerald-500/40 text-emerald-300',
+            'danger':  'bg-rose-500/10 border-rose-500/40 text-rose-300',
+            'warning': 'bg-amber-500/10 border-amber-500/40 text-amber-300'
+          } %}
+          <div class="border rounded-lg px-4 py-3 text-sm {{ styles.get(category, styles['success']) }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <main class="flex-1">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="border-t border-slate-800/80 mt-16">
+    <div class="max-w-6xl mx-auto px-4 py-8 text-sm text-slate-500 flex flex-col sm:flex-row justify-between gap-3">
+      <p>&copy; {{ 2026 }} &middot; {{ _('Built with Flask, MySQL & Tailwind.') }}</p>
+      <p>{{ _('Available for freelance work.') }}</p>
+    </div>
+  </footer>
+
+  {% if ai_enabled %}
+  <div id="ai-panel" class="hidden fixed top-20 right-4 z-[60] w-[22rem] max-w-[calc(100vw-2rem)] h-[28rem] max-h-[calc(100vh-6rem)] flex flex-col rounded-xl border border-slate-800 bg-slate-900 shadow-2xl overflow-hidden">
+    <div class="flex items-center justify-between px-4 py-3 border-b border-slate-800 bg-slate-950/60">
+      <div class="flex items-center gap-2">
+        <svg class="w-4 h-4 text-brand" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.9 5.6L19 9l-4.4 3.1L16 18l-4-2.9L8 18l1.4-5.9L5 9l5.1-1.4L12 2z"/></svg>
+        <span class="font-semibold text-white text-sm">{{ _('Jonard Portfolio Assistant') }}</span>
+      </div>
+      <button type="button" id="ai-close" aria-label="{{ _('Close') }}" class="text-slate-500 hover:text-white text-lg leading-none">&times;</button>
+    </div>
+    <div id="ai-messages" class="flex-1 overflow-y-auto px-4 py-3 space-y-3 text-sm">
+      <div class="text-slate-400">{{ _('Hi! Ask me anything about my projects, skills, or services.') }}</div>
+      <div class="flex flex-wrap gap-1.5">
+        <button type="button" class="ai-chip text-xs px-2 py-1 rounded-full border border-slate-700 text-slate-400 hover:border-brand hover:text-brand transition">{{ _('What are your skills?') }}</button>
+        <button type="button" class="ai-chip text-xs px-2 py-1 rounded-full border border-slate-700 text-slate-400 hover:border-brand hover:text-brand transition">{{ _('Show your projects') }}</button>
+        <button type="button" class="ai-chip text-xs px-2 py-1 rounded-full border border-slate-700 text-slate-400 hover:border-brand hover:text-brand transition">{{ _('How can I contact you?') }}</button>
+      </div>
+    </div>
+    <form id="ai-form" class="border-t border-slate-800 p-3 flex gap-2">
+      <input id="ai-input" type="text" autocomplete="off" maxlength="500" placeholder="{{ _('Type your question...') }}" class="flex-1 min-w-0 rounded-lg bg-slate-950 border border-slate-800 px-3 py-2 text-sm text-slate-200 outline-none focus:border-brand">
+      <button type="submit" id="ai-send" class="px-3 py-2 rounded-lg bg-brand hover:bg-brand-dark text-white text-sm font-medium transition">{{ _('Send') }}</button>
+    </form>
+  </div>
+  {% endif %}
+
+  <script>
+    (function () {
+      var btn = document.getElementById('lang-btn');
+      var menu = document.getElementById('lang-menu');
+      if (btn && menu) {
+        btn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          menu.classList.toggle('hidden');
+        });
+        document.addEventListener('click', function () { menu.classList.add('hidden'); });
+      }
+    })();
+  </script>
+
+  <script>
+    (function () {
+      var themes = window.PORTFOLIO_THEMES;
+      function apply(name) {
+        var t = themes && themes[name];
+        if (!t) return;
+        var r = document.documentElement;
+        r.style.setProperty('--brand', t.brand);
+        r.style.setProperty('--brand-dark', t.dark);
+        r.style.setProperty('--bg', t.bg);
+        localStorage.setItem('portfolio-theme', name);
+        document.querySelectorAll('[data-theme]').forEach(function (b) {
+          b.classList.toggle('ring-2', b.dataset.theme === name);
+          b.classList.toggle('ring-white', b.dataset.theme === name);
+        });
+      }
+      document.querySelectorAll('[data-theme]').forEach(function (b) {
+        b.addEventListener('click', function () { apply(b.dataset.theme); });
+      });
+      apply(localStorage.getItem('portfolio-theme') || 'indigo');
+    })();
+  </script>
+
+  {% if ai_enabled %}
+  <script>
+    (function () {
+      var btn = document.getElementById('ai-btn');
+      var panel = document.getElementById('ai-panel');
+      var close = document.getElementById('ai-close');
+      var form = document.getElementById('ai-form');
+      var input = document.getElementById('ai-input');
+      var send = document.getElementById('ai-send');
+      var box = document.getElementById('ai-messages');
+      if (!btn || !panel || !form) return;
+
+      var csrf = document.querySelector('meta[name="csrf-token"]');
+      var askUrl = {{ url_for('main.assistant_ask')|tojson }};
+      var history = [];
+      var busy = false;
+
+      var MSG = {
+        error: {{ _('Something went wrong. Please try again.')|tojson }},
+        offline: {{ _('The assistant is unavailable right now.')|tojson }},
+        thinking: {{ _('Thinking...')|tojson }}
+      };
+
+      function toggle() {
+        panel.classList.toggle('hidden');
+        if (!panel.classList.contains('hidden')) input.focus();
+      }
+      btn.addEventListener('click', function (e) { e.stopPropagation(); toggle(); });
+      close.addEventListener('click', function () { panel.classList.add('hidden'); });
+
+      function addBubble(text, who) {
+        var wrap = document.createElement('div');
+        wrap.className = who === 'user' ? 'flex justify-end' : 'flex justify-start';
+        var b = document.createElement('div');
+        b.className = who === 'user'
+          ? 'max-w-[85%] rounded-lg px-3 py-2 bg-brand text-white whitespace-pre-wrap'
+          : 'max-w-[85%] rounded-lg px-3 py-2 bg-slate-800 text-slate-200 whitespace-pre-wrap';
+        b.textContent = text;
+        wrap.appendChild(b);
+        box.appendChild(wrap);
+        box.scrollTop = box.scrollHeight;
+        return b;
+      }
+
+      function sendQuestion(q) {
+        if (busy || !q) return;
+        busy = true;
+        addBubble(q, 'user');
+        input.value = '';
+        var pending = addBubble(MSG.thinking, 'ai');
+        send.disabled = true;
+
+        fetch(askUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrf ? csrf.content : ''
+          },
+          body: JSON.stringify({ question: q, history: history })
+        })
+        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
+        .then(function (res) {
+          pending.remove();
+          var answer = res.data && res.data.answer;
+          if (res.ok && answer) {
+            addBubble(answer, 'ai');
+            history.push({ role: 'user', content: q });
+            history.push({ role: 'assistant', content: answer });
+          } else {
+            addBubble(res.data && res.data.error === 'disabled' ? MSG.offline : MSG.error, 'ai');
+          }
+        })
+        .catch(function () {
+          pending.remove();
+          addBubble(MSG.error, 'ai');
+        })
+        .finally(function () {
+          busy = false;
+          send.disabled = false;
+          input.focus();
+        });
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        sendQuestion(input.value.trim());
+      });
+
+      box.querySelectorAll('.ai-chip').forEach(function (chip) {
+        chip.addEventListener('click', function () { sendQuestion(chip.textContent.trim()); });
+      });
+    })();
+  </script>
+  {% endif %}
+</body>
+</html>

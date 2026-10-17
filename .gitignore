@@ -1,0 +1,22 @@
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Flask instance
+instance/
+
+# Uploaded files (panatilihin ang folder, huwag ang laman)
+static/uploads/*
+!static/uploads/.gitkeep
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

@@ -1,0 +1,30 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold text-white mb-6">Dashboard</h1>
+
+<div class="grid sm:grid-cols-4 gap-4">
+  <a href="{{ url_for('admin.projects') }}" class="rounded-xl border border-slate-800 bg-slate-900/50 p-5 hover:border-brand transition">
+    <div class="text-3xl font-bold text-white">{{ total_projects }}</div>
+    <div class="text-sm text-slate-400 mt-1">Projects</div>
+  </a>
+  <a href="{{ url_for('admin.templates') }}" class="rounded-xl border border-slate-800 bg-slate-900/50 p-5 hover:border-brand transition">
+    <div class="text-3xl font-bold text-white">{{ total_templates }}</div>
+    <div class="text-sm text-slate-400 mt-1">Templates</div>
+  </a>
+  <a href="{{ url_for('admin.messages') }}" class="rounded-xl border border-slate-800 bg-slate-900/50 p-5 hover:border-brand transition">
+    <div class="text-3xl font-bold text-white">{{ total_messages }}</div>
+    <div class="text-sm text-slate-400 mt-1">Messages</div>
+  </a>
+  <a href="{{ url_for('admin.messages') }}" class="rounded-xl border border-slate-800 bg-slate-900/50 p-5 hover:border-brand transition">
+    <div class="text-3xl font-bold {{ 'text-amber-400' if unread else 'text-white' }}">{{ unread }}</div>
+    <div class="text-sm text-slate-400 mt-1">Unread messages</div>
+  </a>
+</div>
+
+<div class="mt-8 flex gap-3">
+  <a href="{{ url_for('admin.project_new') }}" class="px-5 py-2.5 rounded-lg bg-brand hover:bg-brand-dark text-white font-medium transition">+ Bagong Project</a>
+  <a href="{{ url_for('admin.messages') }}" class="px-5 py-2.5 rounded-lg border border-slate-700 hover:border-slate-500 text-slate-200 font-medium transition">Tingnan ang Messages</a>
+</div>
+{% endblock %}

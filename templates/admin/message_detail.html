@@ -1,0 +1,26 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Message{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('admin.messages') }}" class="text-sm text-brand hover:underline">&larr; Back to messages</a>
+
+<div class="mt-4 max-w-2xl rounded-xl border border-slate-800 bg-slate-900/50 p-6">
+  <h1 class="text-xl font-bold text-white">{{ message.subject or '(no subject)' }}</h1>
+  <div class="mt-1 text-sm text-slate-400">
+    From <span class="text-slate-200">{{ message.name }}</span>
+    &lt;<a href="mailto:{{ message.email }}" class="text-brand hover:underline">{{ message.email }}</a>&gt;
+  </div>
+  <div class="text-xs text-slate-500 mt-1">{{ message.created_at }} &middot; IP: {{ message.ip_address or 'n/a' }}</div>
+
+  <div class="mt-5 pt-5 border-t border-slate-800 text-slate-300 whitespace-pre-line leading-relaxed">{{ message.body }}</div>
+
+  <div class="mt-6 flex gap-3">
+    <a href="mailto:{{ message.email }}" class="px-4 py-2 rounded-lg bg-brand hover:bg-brand-dark text-white text-sm font-medium transition">Reply via Email</a>
+    <form method="POST" action="{{ url_for('admin.message_delete', message_id=message.id) }}"
+          onsubmit="return confirm('Burahin ang mensahe?');">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button type="submit" class="px-4 py-2 rounded-lg text-rose-400 border border-rose-500/30 hover:bg-rose-500/10 text-sm font-medium transition">Delete</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

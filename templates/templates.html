@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Templates &middot; My Portfolio{% endblock %}
+
+{% block content %}
+<section class="max-w-6xl mx-auto px-4 pt-16 pb-8">
+  <h1 class="text-3xl sm:text-4xl font-bold text-white">{{ _('Web Templates for Sale') }}</h1>
+  <p class="text-slate-400 mt-2">{{ _('Ready-to-use website templates. Preview, then buy or message me.') }}</p>
+</section>
+
+<section class="max-w-6xl mx-auto px-4 pb-16">
+  {% if db_error %}
+    <div class="rounded-lg border border-amber-500/40 bg-amber-500/10 text-amber-300 px-4 py-3 text-sm">
+      {{ _('Cannot connect to the database. Make sure MySQL is running in XAMPP.') }}
+    </div>
+  {% elif templates %}
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {% for t in templates %}
+        <div class="group rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden hover:border-brand transition flex flex-col">
+          <a href="{{ url_for('main.template_detail', slug=t.slug) }}" class="block aspect-video bg-slate-800 overflow-hidden">
+            {% if t.image_url %}
+              <img src="{{ t.image_url }}" alt="{{ t.title }}" class="w-full h-full object-cover group-hover:scale-105 transition">
+            {% else %}
+              <div class="w-full h-full flex items-center justify-center text-slate-600 text-sm">{{ _('No preview') }}</div>
+            {% endif %}
+          </a>
+          <div class="p-5 flex flex-col flex-1">
+            <h3 class="font-semibold text-white">
+              <a href="{{ url_for('main.template_detail', slug=t.slug) }}" class="group-hover:text-brand transition">{{ t.title }}</a>
+            </h3>
+            <p class="text-sm text-slate-400 mt-1 line-clamp-2">{{ t.summary }}</p>
+            {% if t.tech_stack %}
+              <div class="mt-3 flex flex-wrap gap-1.5">
+                {% for tech in t.tech_stack.split(',') %}
+                  <span class="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-400">{{ tech.strip() }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+            <div class="mt-4 pt-4 border-t border-slate-800 flex items-center justify-between gap-3">
+              <span class="text-brand font-semibold">{{ t.price or _('Free') }}</span>
+              <div class="flex gap-2">
+                {% if t.demo_url %}
+                  <a href="{{ t.demo_url }}" target="_blank" rel="noopener noreferrer"
+                     class="px-3 py-1.5 rounded-lg border border-slate-700 hover:border-brand hover:text-brand text-sm transition">{{ _('Demo') }}</a>
+                {% endif %}
+                {% if t.buy_url %}
+                  <a href="{{ t.buy_url }}" target="_blank" rel="noopener noreferrer"
+                     class="px-3 py-1.5 rounded-lg bg-brand hover:bg-brand-dark text-white text-sm font-medium transition">{{ _('Buy') }}</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-slate-500">{{ _('No templates available yet.') }}</p>
+  {% endif %}
+</section>
+{% endblock %}

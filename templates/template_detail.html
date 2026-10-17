@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}{{ template.title }} &middot; Templates{% endblock %}
+
+{% block content %}
+<section class="max-w-5xl mx-auto px-4 py-16">
+  <a href="{{ url_for('main.templates') }}" class="text-sm text-slate-400 hover:text-brand transition">&larr; {{ _('Back to templates') }}</a>
+
+  <div class="mt-6 grid lg:grid-cols-2 gap-8">
+    <div class="rounded-xl border border-slate-800 bg-slate-900/50 overflow-hidden">
+      {% if template.image_url %}
+        <img src="{{ template.image_url }}" alt="{{ template.title }}" class="w-full h-auto object-cover">
+      {% else %}
+        <div class="aspect-video flex items-center justify-center text-slate-600">{{ _('No preview') }}</div>
+      {% endif %}
+    </div>
+
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-white">{{ template.title }}</h1>
+      {% if template.summary %}
+        <p class="text-slate-300 mt-3">{{ template.summary }}</p>
+      {% endif %}
+
+      {% if template.tech_stack %}
+        <div class="mt-4 flex flex-wrap gap-1.5">
+          {% for tech in template.tech_stack.split(',') %}
+            <span class="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-400">{{ tech.strip() }}</span>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="mt-6 flex items-center gap-3">
+        <span class="text-2xl font-bold text-brand">{{ template.price or _('Free') }}</span>
+      </div>
+
+      <div class="mt-6 flex flex-wrap gap-3">
+        {% if template.buy_url %}
+          <a href="{{ template.buy_url }}" target="_blank" rel="noopener noreferrer"
+             class="px-5 py-3 rounded-lg bg-brand hover:bg-brand-dark text-white font-medium transition">{{ _('Buy this template') }}</a>
+        {% else %}
+          <a href="{{ url_for('main.contact') }}"
+             class="px-5 py-3 rounded-lg bg-brand hover:bg-brand-dark text-white font-medium transition">{{ _('Get in touch') }}</a>
+        {% endif %}
+        {% if template.demo_url %}
+          <a href="{{ template.demo_url }}" target="_blank" rel="noopener noreferrer"
+             class="px-5 py-3 rounded-lg border border-slate-700 hover:border-slate-500 text-slate-200 font-medium transition">{{ _('Live demo') }}</a>
+        {% endif %}
+      </div>
+
+      {% if template.description %}
+        <div class="mt-8 pt-6 border-t border-slate-800">
+          <h2 class="text-lg font-semibold text-white mb-2">{{ _('Description') }}</h2>
+          <p class="text-slate-400 whitespace-pre-wrap leading-relaxed">{{ template.description }}</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

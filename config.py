@@ -1,0 +1,109 @@
+"""
+config.py
+---------
+Central configuration. Values come from environment variables (.env),
+para hindi naka-hardcode ang secrets sa code.
+"""
+
+import os
+from dotenv import load_dotenv
+
+basedir = os.path.abspath(os.path.dirname(__file__))
+load_dotenv(os.path.join(basedir, ".env"))
+
+
+def _as_bool(value, default=False):
+    if value is None:
+        return default
+    return str(value).strip().lower() in ("1", "true", "yes", "on")
+
+
+class Config:
+    # --- Flask core ---
+    SECRET_KEY = os.environ.get("SECRET_KEY", "dev-only-change-me-in-production")
+    DEBUG = _as_bool(os.environ.get("FLASK_DEBUG"), False)
+
+    # --- Session / cookie security ---
+    SESSION_COOKIE_HTTPONLY = True          # JS hindi mababasa ang session cookie
+    SESSION_COOKIE_SAMESITE = "Lax"         # panlaban sa CSRF sa cross-site
+    SESSION_COOKIE_SECURE = _as_bool(os.environ.get("SESSION_COOKIE_SECURE"), False)
+    PERMANENT_SESSION_LIFETIME = 60 * 60 * 8   # 8 oras bago mag-expire
+    REMEMBER_COOKIE_HTTPONLY = True
+    REMEMBER_COOKIE_SAMESITE = "Lax"
+
+    # --- Upload limits (para hindi ma-abuso) ---
+    MAX_CONTENT_LENGTH = 4 * 1024 * 1024    # max 4 MB upload
+    UPLOAD_FOLDER = os.path.join(basedir, "static", "uploads")
+    ALLOWED_IMAGE_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
+
+    # --- Database (XAMPP MySQL/MariaDB) ---
+    DB_HOST = os.environ.get("DB_HOST", "localhost")
+    DB_PORT = int(os.environ.get("DB_PORT", "3306"))
+    DB_USER = os.environ.get("DB_USER", "root")
+    DB_PASSWORD = os.environ.get("DB_PASSWORD", "")
+    DB_NAME = os.environ.get("DB_NAME", "portfolio_db")
+
+    # --- Security ---
+    LOGIN_MAX_ATTEMPTS = 8                  # bago ma-throttle
+    LOGIN_WINDOW = "5 minute"               # window ng rate limit
+
+    # Storage ng rate limiter. Sa VPS i-set ang redis://127.0.0.1:6379
+    # (shared sa lahat ng gunicorn workers); default = in-memory (dev).
+    RATELIMIT_STORAGE_URI = os.environ.get("RATELIMIT_STORAGE_URI", "memory://")
+
+    # --- Internationalization ---
+    LANGUAGES = ["en", "fil", "ceb"]
+    BABEL_DEFAULT_LOCALE = "en"
+    BABEL_DEFAULT_TIMEZONE = "Asia/Manila"
+
+    # --- Social links (ilagay sa .env; blangko = nakatago ang button) ---
+    SOCIAL_LINKS = {
+        "facebook": os.environ.get("FACEBOOK_URL", ""),
+        "tiktok": os.environ.get("TIKTOK_URL", ""),
+    }
+
+    # --- Project categories (para sa filter sa public site) ---
+    PROJECT_CATEGORIES = ["webdev", "appdev", "gamedev", "cert"]
+
+    # --- Email (SMTP) para sa contact notifications ---
+    # Blangko ang SMTP_USER/PASSWORD = naka-disable ang email sending
+    # (naka-save pa rin ang mensahe sa admin inbox).
+    SMTP_HOST = os.environ.get("SMTP_HOST", "smtp.gmail.com")
+    SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
+    SMTP_USER = os.environ.get("SMTP_USER", "")
+    SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD", "")
+    SMTP_TIMEOUT = int(os.environ.get("SMTP_TIMEOUT", "20"))
+    MAIL_TO = os.environ.get("MAIL_TO", "")   # email mo (recipient); default = SMTP_USER
+
+    # --- AI Assistant (OpenAI-compatible) ---
+    # Walang API key = naka-disable ang assistant (hindi lalabas ang error sa user).
+    AI_API_KEY = os.environ.get("AI_API_KEY", "")
+    AI_BASE_URL = os.environ.get("AI_BASE_URL", "https://api.openai.com/v1").rstrip("/")
+    AI_MODEL = os.environ.get("AI_MODEL", "gpt-4o-mini")
+    AI_MAX_TOKENS = int(os.environ.get("AI_MAX_TOKENS", "500"))
+    AI_TIMEOUT = int(os.environ.get("AI_TIMEOUT", "30"))
+    AI_MAX_QUESTION = 500
+    AI_MAX_HISTORY = 8
+
+    @classmethod
+    def db_config(cls):
+        return {
+            "host": cls.DB_HOST,
+            "port": cls.DB_PORT,
+            "user": cls.DB_USER,
+            "password": cls.DB_PASSWORD,
+            "database": cls.DB_NAME,
+            "charset": "utf8mb4",
+            "autocommit": False,
+        }
+
+
+class ProductionConfig(Config):
+    SESSION_COOKIE_SECURE = True            # HTTPS-only cookies sa production
+
+
+def get_config(env=None):
+    env = (env or os.environ.get("FLASK_ENV", "development")).lower()
+    if env == "production":
+        return ProductionConfig
+    return Config

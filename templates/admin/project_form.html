@@ -1,0 +1,97 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}{{ 'Edit' if project else 'New' }} Project{% endblock %}
+
+{% block content %}
+{% set cat_labels = {
+  'webdev': 'Web Dev',
+  'appdev': 'App Dev',
+  'gamedev': 'Game Dev',
+  'cert': 'Certificates'
+} %}
+<h1 class="text-2xl font-bold text-white mb-6">{{ 'I-edit' if project else 'Bagong' }} Project</h1>
+
+<form method="POST" enctype="multipart/form-data" class="max-w-2xl space-y-5">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+  <div>
+    <label class="block text-sm text-slate-400 mb-1.5">Title *</label>
+    <input type="text" name="title" maxlength="150" required value="{{ project.title if project else '' }}"
+           class="w-full rounded-lg bg-slate-900 border border-slate-700 focus:border-brand focus:ring-0 px-3.5 py-2.5 text-slate-100 outline-none">
+  </div>
+
+  <div>
+    <label class="block text-sm text-slate-400 mb-1.5">Summary</label>
+    <input type="text" name="summary" maxlength="300" value="{{ project.summary if project else '' }}"
+           class="w-full rounded-lg bg-slate-900 border border-slate-700 focus:border-brand focus:ring-0 px-3.5 py-2.5 text-slate-100 outline-none">
+  </div>
+
+  <div>
+    <label class="block text-sm text-slate-400 mb-1.5">Description</label>
+    <textarea name="description" rows="6" maxlength="5000"
+              class="w-full rounded-lg bg-slate-900 border border-slate-700 focus:border-brand focus:ring-0 px-3.5 py-2.5 text-slate-100 outline-none">{{ project.description if project else '' }}</textarea>
+  </div>
+
+  <div>
+    <label class="block text-sm text-slate-400 mb-1.5">Tech Stack (comma-separated)</label>
+    <input type="text" name="tech_stack" maxlength="255" value="{{ project.tech_stack if project else '' }}"
+           placeholder="Python, Flask, MySQL"
+           class="w-full rounded-lg bg-slate-900 border border-slate-700 focus:border-brand focus:ring-0 px-3.5 py-2.5 text-slate-100 outline-none">
+  </div>
+
+  <div>
+    <label class="block text-sm text-slate-400 mb-1.5">Category</label>
+    <select name="category"
+            class="w-full rounded-lg bg-slate-900 border border-slate-700 focus:border-brand focus:ring-0 px-3.5 py-2.5 text-slate-100 outline-none">
+      {% for code in project_categories %}
+        <option value="{{ code }}" {{ 'selected' if project and project.category == code else '' }}>
+          {{ cat_labels.get(code, code) }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="grid sm:grid-cols-2 gap-4">
+    <div>
+      <label class="block text-sm text-slate-400 mb-1.5">Live URL</label>
+      <input type="url" name="live_url" maxlength="500" value="{{ project.live_url if project else '' }}"
+             class="w-full rounded-lg bg-slate-900 border border-slate-700 focus:border-brand focus:ring-0 px-3.5 py-2.5 text-slate-100 outline-none">
+    </div>
+    <div>
+      <label class="block text-sm text-slate-400 mb-1.5">Repo URL</label>
+      <input type="url" name="repo_url" maxlength="500" value="{{ project.repo_url if project else '' }}"
+             class="w-full rounded-lg bg-slate-900 border border-slate-700 focus:border-brand focus:ring-0 px-3.5 py-2.5 text-slate-100 outline-none">
+    </div>
+  </div>
+
+  <div>
+    <label class="block text-sm text-slate-400 mb-1.5">Image URL (direct link sa image, o mag-upload sa baba)</label>
+    <input type="url" name="image_url" maxlength="500" value="{{ project.image_url if project else '' }}"
+           placeholder="https://i.imgur.com/xxxxx.png"
+           class="w-full rounded-lg bg-slate-900 border border-slate-700 focus:border-brand focus:ring-0 px-3.5 py-2.5 text-slate-100 outline-none">
+  </div>
+
+  <div>
+    <label class="block text-sm text-slate-400 mb-1.5">Upload Image (png/jpg/webp/gif, max 4MB)</label>
+    <input type="file" name="image" accept="image/*"
+           class="w-full text-sm text-slate-400 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700">
+  </div>
+
+  <div class="grid sm:grid-cols-2 gap-4 items-center">
+    <div>
+      <label class="block text-sm text-slate-400 mb-1.5">Sort order (maliit = nauuna)</label>
+      <input type="number" name="sort_order" value="{{ project.sort_order if project else 0 }}"
+             class="w-full rounded-lg bg-slate-900 border border-slate-700 focus:border-brand focus:ring-0 px-3.5 py-2.5 text-slate-100 outline-none">
+    </div>
+    <label class="flex items-center gap-2 mt-6">
+      <input type="checkbox" name="is_visible" class="rounded bg-slate-800 border-slate-600"
+             {{ 'checked' if (not project) or project.is_visible else '' }}>
+      <span class="text-sm text-slate-300">Visible sa public site</span>
+    </label>
+  </div>
+
+  <div class="flex gap-3 pt-2">
+    <button type="submit" class="px-5 py-2.5 rounded-lg bg-brand hover:bg-brand-dark text-white font-medium transition">I-save</button>
+    <a href="{{ url_for('admin.projects') }}" class="px-5 py-2.5 rounded-lg border border-slate-700 hover:border-slate-500 text-slate-200 font-medium transition">Cancel</a>
+  </div>
+</form>
+{% endblock %}

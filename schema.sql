@@ -1,0 +1,60 @@
+-- schema.sql
+-- Reference lang ito. Awtomatikong ginagawa ng database.py ang mga table.
+-- Pwede mo rin i-import ito sa phpMyAdmin kung gusto mo manual.
+
+CREATE DATABASE IF NOT EXISTS portfolio_db
+  DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+USE portfolio_db;
+
+CREATE TABLE IF NOT EXISTS admins (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(50) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS projects (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(150) NOT NULL,
+  slug VARCHAR(170) NOT NULL UNIQUE,
+  summary VARCHAR(300),
+  description TEXT,
+  tech_stack VARCHAR(255),
+  image_url VARCHAR(500),
+  live_url VARCHAR(500),
+  repo_url VARCHAR(500),
+  category VARCHAR(20) NOT NULL DEFAULT 'webdev',
+  is_visible TINYINT(1) NOT NULL DEFAULT 1,
+  sort_order INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS messages (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(150) NOT NULL,
+  subject VARCHAR(200),
+  body TEXT NOT NULL,
+  is_read TINYINT(1) NOT NULL DEFAULT 0,
+  ip_address VARCHAR(45),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS templates (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(150) NOT NULL,
+  slug VARCHAR(170) NOT NULL UNIQUE,
+  summary VARCHAR(300),
+  description TEXT,
+  tech_stack VARCHAR(255),
+  price VARCHAR(50),
+  image_url VARCHAR(500),
+  demo_url VARCHAR(500),
+  buy_url VARCHAR(500),
+  is_visible TINYINT(1) NOT NULL DEFAULT 1,
+  sort_order INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

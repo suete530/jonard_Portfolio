@@ -1,0 +1,266 @@
+# Filipino (Philippines) translations for PROJECT.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-10-15 19:01+0800\n"
+"PO-Revision-Date: 2026-10-15 16:32+0800\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fil\n"
+"Language-Team: tl <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: blueprints/main.py:112
+msgid "Please enter your name."
+msgstr "Ilagay ang pangalan mo."
+
+#: blueprints/main.py:114
+msgid "A valid email is required."
+msgstr "Kailangan ng valid na email."
+
+#: blueprints/main.py:116
+msgid "The message is too short."
+msgstr "Masyadong maikli ang mensahe."
+
+#: blueprints/main.py:127
+msgid "Cannot save right now. Please try again later."
+msgstr "Hindi ma-save ngayon. Subukan ulit mamaya."
+
+#: blueprints/main.py:136
+msgid "Thank you! Your message has been received."
+msgstr "Salamat! Natanggap na ang mensahe mo."
+
+#: templates/base.html:51
+msgid "Home"
+msgstr "Home"
+
+#: templates/base.html:73
+msgid "Templates"
+msgstr "Mga Template"
+
+#: templates/base.html:74 templates/projects.html:12
+msgid "Projects"
+msgstr "Mga Proyekto"
+
+#: templates/base.html:75
+msgid "Contact"
+msgstr "Makipag-ugnayan"
+
+#: templates/base.html:102
+msgid "Built with Flask, MySQL & Tailwind."
+msgstr "Ginawa gamit ang Flask, MySQL at Tailwind."
+
+#: templates/base.html:103
+msgid "Available for freelance work."
+msgstr "Bukas para sa freelance na trabaho."
+
+#: templates/base.html:112
+msgid "Jonard Portfolio Assistant"
+msgstr "Assistant ng Portfolio ni Jonard"
+
+#: templates/base.html:114
+msgid "Close"
+msgstr "Isara"
+
+#: templates/base.html:117
+msgid "Hi! Ask me anything about my projects, skills, or services."
+msgstr "Kumusta! Magtanong ka tungkol sa mga proyekto, skills, o serbisyo ko."
+
+#: templates/base.html:119
+msgid "What are your skills?"
+msgstr "Ano-ano ang mga skills mo?"
+
+#: templates/base.html:120
+msgid "Show your projects"
+msgstr "Ipakita ang mga proyekto mo"
+
+#: templates/base.html:121
+msgid "How can I contact you?"
+msgstr "Paano kita makikipag-ugnayan?"
+
+#: templates/base.html:125
+msgid "Type your question..."
+msgstr "I-type ang tanong mo..."
+
+#: templates/base.html:126 templates/contact.html:40
+msgid "Send"
+msgstr "Ipadala"
+
+#: templates/base.html:186
+msgid "Something went wrong. Please try again."
+msgstr "May naganap na error. Subukan ulit."
+
+#: templates/base.html:187
+msgid "The assistant is unavailable right now."
+msgstr "Hindi available ang assistant ngayon."
+
+#: templates/base.html:188
+msgid "Thinking..."
+msgstr "Nag-iisip..."
+
+#: templates/contact.html:7 templates/index.html:87
+#: templates/template_detail.html:41
+msgid "Get in touch"
+msgstr "Makipag-ugnayan"
+
+#: templates/contact.html:8
+msgid "Have a project? Message me and I will get back to you."
+msgstr "May proyekto ka? I-message mo ako at babalikan kita."
+
+#: templates/contact.html:15
+msgid "Name"
+msgstr "Pangalan"
+
+#: templates/contact.html:27
+msgid "Subject"
+msgstr "Paksa"
+
+#: templates/contact.html:33
+msgid "Message"
+msgstr "Mensahe"
+
+#: templates/contact.html:46
+msgid "Or connect with me on social media"
+msgstr "O kaya, i-follow mo ako sa social media"
+
+#: templates/contact.html:52
+msgid "Facebook"
+msgstr "Facebook"
+
+#: templates/contact.html:59
+msgid "TikTok"
+msgstr "TikTok"
+
+#: templates/index.html:74
+msgid "Full-Stack Web, Mobile App Developer & Game Developer"
+msgstr "Full-Stack Web, Mobile App at Game Developer"
+
+#: templates/index.html:75
+msgid "Crafting clean, scalable, and user-focused digital solutions."
+msgstr "Gumagawa ng malinis, scalable, at user-focused na digital solutions."
+
+#: templates/index.html:80
+msgid ""
+"I build web systems — frontend, backend, database & hosting. Also Android"
+" apps & games."
+msgstr ""
+"Gumagawa ako ng web systems — frontend, backend, database at hosting. "
+"Pati Android apps at games."
+
+#: templates/index.html:83
+msgid ""
+"I create custom web applications using Python, Flask, MySQL, and a modern"
+" UI. From idea to deployment — full support."
+msgstr ""
+"Gumagawa ako ng custom web applications gamit ang Python, Flask, MySQL, "
+"at modernong UI. Mula ideya hanggang deployment — buong suporta."
+
+#: templates/index.html:86
+msgid "View Projects"
+msgstr "Tingnan ang mga Proyekto"
+
+#: templates/index.html:89
+msgid "Color"
+msgstr "Kulay"
+
+#: templates/index.html:117
+msgid "Featured Projects"
+msgstr "Mga Tampok na Proyekto"
+
+#: templates/index.html:118
+msgid "All projects"
+msgstr "Lahat ng proyekto"
+
+#: templates/index.html:123 templates/projects.html:36
+#: templates/templates.html:13
+msgid "Cannot connect to the database. Make sure MySQL is running in XAMPP."
+msgstr "Hindi makakonekta sa database. Siguraduhing naka-start ang MySQL sa XAMPP."
+
+#: templates/index.html:152
+msgid "No projects yet. Log in to admin to add some."
+msgstr "Wala pang proyekto. Mag-login sa admin para magdagdag."
+
+#: templates/projects.html:6
+msgid "Web Dev"
+msgstr "Web Dev"
+
+#: templates/projects.html:7
+msgid "App Dev"
+msgstr "App Dev"
+
+#: templates/projects.html:8
+msgid "Game Dev"
+msgstr "Game Dev"
+
+#: templates/projects.html:9
+msgid "Certificates"
+msgstr "Mga Sertipiko"
+
+#: templates/projects.html:13
+msgid "Systems and web apps I have built."
+msgstr "Mga system at web app na nagawa ko."
+
+#: templates/projects.html:21
+msgid "All"
+msgstr "Lahat"
+
+#: templates/projects.html:71
+msgid "No projects in this category yet."
+msgstr "Wala pang proyekto sa kategoryang ito."
+
+#: templates/projects.html:73
+msgid "No projects yet."
+msgstr "Wala pang proyekto."
+
+#: templates/template_detail.html:6
+msgid "Back to templates"
+msgstr "Bumalik sa mga template"
+
+#: templates/template_detail.html:13 templates/templates.html:23
+msgid "No preview"
+msgstr "Walang preview"
+
+#: templates/template_detail.html:32 templates/templates.html:39
+msgid "Free"
+msgstr "Libre"
+
+#: templates/template_detail.html:38
+msgid "Buy this template"
+msgstr "Bilhin ang template na ito"
+
+#: templates/template_detail.html:45
+msgid "Live demo"
+msgstr "Live demo"
+
+#: templates/template_detail.html:51
+msgid "Description"
+msgstr "Paglalarawan"
+
+#: templates/templates.html:6
+msgid "Web Templates for Sale"
+msgstr "Mga Web Template na Ibinebenta"
+
+#: templates/templates.html:7
+msgid "Ready-to-use website templates. Preview, then buy or message me."
+msgstr "Mga website template na gamit agad. I-preview, tapos bilhin o i-message ako."
+
+#: templates/templates.html:43
+msgid "Demo"
+msgstr "Demo"
+
+#: templates/templates.html:47
+msgid "Buy"
+msgstr "Bilhin"
+
+#: templates/templates.html:56
+msgid "No templates available yet."
+msgstr "Wala pang available na template."
+

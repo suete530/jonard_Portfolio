@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Oops &middot; My Portfolio{% endblock %}
+
+{% block content %}
+<section class="max-w-2xl mx-auto px-4 py-24 text-center">
+  <h1 class="text-6xl font-bold text-white">Oops</h1>
+  <p class="text-slate-400 mt-4">{{ message or "Hindi nahanap ang page na hinahanap mo." }}</p>
+  <a href="{{ url_for('main.index') }}"
+     class="inline-block mt-8 px-5 py-3 rounded-lg bg-brand hover:bg-brand-dark text-white font-medium transition">
+    Bumalik sa Home
+  </a>
+</section>
+{% endblock %}
