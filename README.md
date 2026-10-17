@@ -114,12 +114,13 @@ Stack (lahat libre, walang card):
    - Build: `pip install -r requirements.txt`
    - Start: `gunicorn app:app`
 3. Sa **Aiven**: gumawa ng MySQL service → kopyahin ang `host`, `port`, `user`,
-   `password`, `database`. I-download ang **CA certificate** (`ca.pem`) →
-   ilagay sa repo bilang `certs/aiven-ca.pem`.
+   `password`, `database`. (I-set ang `DB_SSL_REQUIRED=1`; hindi na kailangan
+   ang CA file. Opsyonal: i-download ang **CA certificate** at i-set ang
+   `DB_SSL_CA=certs/aiven-ca.pem` para sa mas mahigpit na verification.)
 4. Sa **Cloudinary**: kopyahin ang `CLOUDINARY_URL`.
 5. Sa **Resend**: gumawa ng API key → `RESEND_API_KEY`; `MAIL_TO` = email mo.
 6. Sa Render **Environment** tab, ilagay ang mga ito:
-   `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_SSL_CA=certs/aiven-ca.pem`,
+   `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_SSL_REQUIRED=1`,
    `RESEND_API_KEY`, `MAIL_TO`, `MAIL_FROM`, `CLOUDINARY_URL`.
 7. Deploy → buksan ang site → gumawa ng admin account (isa-isa sa Render Shell):
    `python seed_admin.py`

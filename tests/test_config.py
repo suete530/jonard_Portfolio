@@ -20,3 +20,28 @@ def test_debug_off_by_default():
 def test_get_config_production():
     assert get_config("production") is ProductionConfig
     assert get_config("development") is Config
+
+
+def test_db_config_no_ssl_by_default(monkeypatch):
+    monkeypatch.setattr(Config, "DB_SSL_CA", "")
+    monkeypatch.setattr(Config, "DB_SSL_REQUIRED", False)
+    cfg = Config.db_config()
+    assert "ssl_ca" not in cfg
+    assert "ssl_disabled" not in cfg
+    assert cfg["charset"] == "utf8mb4"
+
+
+def test_db_config_ssl_ca(monkeypatch):
+    monkeypatch.setattr(Config, "DB_SSL_CA", "certs/ca.pem")
+    cfg = Config.db_config()
+    assert cfg["ssl_ca"] == "certs/ca.pem"
+    assert cfg["ssl_verify_cert"] is True
+
+
+def test_db_config_ssl_required_without_ca(monkeypatch):
+    monkeypatch.setattr(Config, "DB_SSL_CA", "")
+    monkeypatch.setattr(Config, "DB_SSL_REQUIRED", True)
+    cfg = Config.db_config()
+    assert cfg["ssl_disabled"] is False
+    assert cfg["ssl_verify_cert"] is False
+    assert "ssl_ca" not in cfg

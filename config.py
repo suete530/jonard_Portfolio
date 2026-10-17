@@ -45,6 +45,9 @@ class Config:
     # Path sa CA cert para sa SSL (kailangan ng managed DB tulad ng Aiven).
     # Blangko = hindi ipipilit ang SSL (ok sa local XAMPP).
     DB_SSL_CA = os.environ.get("DB_SSL_CA", "")
+    # Kung 1 at walang DB_SSL_CA: encrypted connection pero hindi bine-verify
+    # ang server cert (kailangan ng Aiven/PlanetScale na REQUIRED ang SSL).
+    DB_SSL_REQUIRED = _as_bool(os.environ.get("DB_SSL_REQUIRED"), False)
 
     # --- Security ---
     LOGIN_MAX_ATTEMPTS = 8                  # bago ma-throttle
@@ -117,6 +120,10 @@ class Config:
             # Managed MySQL (Aiven, etc.) ay nangangailangan ng TLS.
             cfg["ssl_ca"] = cls.DB_SSL_CA
             cfg["ssl_verify_cert"] = True
+        elif cls.DB_SSL_REQUIRED:
+            # TLS na walang cert verification (kung walang CA file).
+            cfg["ssl_disabled"] = False
+            cfg["ssl_verify_cert"] = False
         return cfg
 
 
