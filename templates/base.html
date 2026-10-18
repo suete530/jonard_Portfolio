@@ -40,7 +40,14 @@
       <a href="{{ url_for('main.index') }}" class="font-bold text-lg tracking-tight text-white">
         jonard<span class="text-brand">.portfolio</span>
       </a>
-      <div class="flex items-center gap-2 text-sm">
+      <button type="button" id="nav-toggle" class="md:hidden flex items-center justify-center w-10 h-10 rounded-lg border border-slate-700 text-slate-200 hover:bg-slate-800/70 transition" aria-label="{{ _('Open menu') }}">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="hidden md:flex items-center gap-2 text-sm" id="nav-menu">
         <div class="flex items-center gap-1 mr-1" id="theme-picker">
           <button type="button" data-theme="indigo" class="w-6 h-6 rounded-full bg-indigo-500 border-2 border-slate-700 hover:scale-105 transition" title="Indigo"></button>
           <button type="button" data-theme="emerald" class="w-6 h-6 rounded-full bg-emerald-500 border-2 border-slate-700 hover:scale-105 transition" title="Emerald"></button>
@@ -74,6 +81,21 @@
         <a href="{{ url_for('main.projects') }}" class="px-3 py-2 rounded-lg hover:bg-slate-800/70 transition">{{ _('Projects') }}</a>
         <a href="{{ url_for('main.contact') }}" class="px-3 py-2 rounded-lg hover:bg-slate-800/70 transition">{{ _('Contact') }}</a>
         <a href="{{ url_for('admin.dashboard') }}" class="px-3 py-2 rounded-lg bg-brand hover:bg-brand-dark text-white font-medium transition">Admin</a>
+      </div>
+    </div>
+    <div class="md:hidden hidden border-t border-slate-800/80 bg-slate-950/95" id="nav-mobile">
+      <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-2 text-sm">
+        <a href="{{ url_for('main.index') }}" class="px-2 py-2 rounded-lg hover:bg-slate-800/70 transition">{{ _('Home') }}</a>
+        <a href="{{ url_for('main.templates') }}" class="px-2 py-2 rounded-lg hover:bg-slate-800/70 transition">{{ _('Templates') }}</a>
+        <a href="{{ url_for('main.projects') }}" class="px-2 py-2 rounded-lg hover:bg-slate-800/70 transition">{{ _('Projects') }}</a>
+        <a href="{{ url_for('main.contact') }}" class="px-2 py-2 rounded-lg hover:bg-slate-800/70 transition">{{ _('Contact') }}</a>
+        <a href="{{ url_for('admin.dashboard') }}" class="px-2 py-2 rounded-lg bg-brand text-white font-medium transition">Admin</a>
+        {% if ai_enabled %}
+        <button type="button" id="ai-btn-mobile" class="mt-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-brand/40 text-brand hover:bg-brand/10 transition font-medium">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.9 5.6L19 9l-4.4 3.1L16 18l-4-2.9L8 18l1.4-5.9L5 9l5.1-1.4L12 2z"/></svg>
+          AI
+        </button>
+        {% endif %}
       </div>
     </div>
   </nav>
@@ -130,6 +152,15 @@
 
   <script>
     (function () {
+      var navToggle = document.getElementById('nav-toggle');
+      var navMobile = document.getElementById('nav-mobile');
+      if (navToggle && navMobile) {
+        navToggle.addEventListener('click', function (e) {
+          e.stopPropagation();
+          navMobile.classList.toggle('hidden');
+        });
+      }
+
       var btn = document.getElementById('lang-btn');
       var menu = document.getElementById('lang-menu');
       if (btn && menu) {
@@ -137,7 +168,10 @@
           e.stopPropagation();
           menu.classList.toggle('hidden');
         });
-        document.addEventListener('click', function () { menu.classList.add('hidden'); });
+        document.addEventListener('click', function () {
+          menu.classList.add('hidden');
+          if (navMobile) navMobile.classList.add('hidden');
+        });
       }
     })();
   </script>
@@ -162,6 +196,14 @@
         b.addEventListener('click', function () { apply(b.dataset.theme); });
       });
       apply(localStorage.getItem('portfolio-theme') || 'indigo');
+      var aiBtnMobile = document.getElementById('ai-btn-mobile');
+      if (aiBtnMobile) {
+        aiBtnMobile.addEventListener('click', function () {
+          var aiBtn = document.getElementById('ai-btn');
+          if (aiBtn) aiBtn.click();
+          if (navMobile) navMobile.classList.add('hidden');
+        });
+      }
     })();
   </script>
 

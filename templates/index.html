@@ -70,25 +70,25 @@
   'gamedev': _('Game Dev'),
   'cert': _('Certificates')
 } %}
-<section class="max-w-6xl mx-auto px-4 pt-20 pb-16">
-  <div class="flex items-center gap-6 sm:gap-8 mb-6">
-    <div class="fire-ring">
+<section class="max-w-6xl mx-auto px-4 pt-12 sm:pt-20 pb-12 sm:pb-16">
+  <div class="flex flex-col sm:flex-row sm:items-center gap-6 sm:gap-8 mb-6 text-center sm:text-left">
+    <div class="fire-ring mx-auto sm:mx-0">
       <img src="https://i.imgur.com/Btd47Kg.jpeg" alt="Profile" referrerpolicy="no-referrer">
     </div>
     <div>
-      <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.05]">Jonard Suete</h1>
-      <p class="text-slate-200 text-lg sm:text-xl md:text-2xl font-semibold mt-2">{{ _('Full-Stack Web, Mobile App Developer & Game Developer') }}</p>
-      <p class="text-slate-400 text-base sm:text-lg mt-1 max-w-xl">{{ _('Crafting clean, scalable, and user-focused digital solutions.') }}</p>
+      <h1 class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.05]">Jonard Suete</h1>
+      <p class="text-slate-200 text-base sm:text-xl md:text-2xl font-semibold mt-2">{{ _('Full-Stack Web, Mobile App Developer & Game Developer') }}</p>
+      <p class="text-slate-400 text-sm sm:text-lg mt-1 max-w-xl mx-auto sm:mx-0">{{ _('Crafting clean, scalable, and user-focused digital solutions.') }}</p>
     </div>
   </div>
   <p class="text-brand font-medium mb-3"></p>
-  <h1 class="text-4xl sm:text-6xl font-bold text-white leading-tight max-w-3xl">
+  <h1 class="text-3xl sm:text-5xl md:text-6xl font-bold text-white leading-tight max-w-3xl text-center sm:text-left mx-auto sm:mx-0">
     {{ _('I build web systems — frontend, backend, database & hosting. Also Android apps & games.') }}
   </h1>
-  <p class="mt-6 text-lg text-slate-400 max-w-2xl">
+  <p class="mt-6 text-base sm:text-lg text-slate-400 max-w-2xl text-center sm:text-left mx-auto sm:mx-0">
     {{ _('I create custom web applications using Python, Flask, MySQL, and a modern UI. From idea to deployment — full support.') }}
   </p>
-  <div class="mt-8 flex flex-wrap items-center gap-3">
+  <div class="mt-8 flex flex-wrap items-center justify-center sm:justify-start gap-3">
     <a href="{{ url_for('main.projects') }}" class="px-5 py-3 rounded-lg bg-brand hover:bg-brand-dark text-white font-medium transition">{{ _('View Projects') }}</a>
     <a href="{{ url_for('main.contact') }}" class="px-5 py-3 rounded-lg border border-slate-700 hover:border-slate-500 text-slate-200 font-medium transition">{{ _('Get in touch') }}</a>
     <div class="flex items-center gap-2 ml-1">
